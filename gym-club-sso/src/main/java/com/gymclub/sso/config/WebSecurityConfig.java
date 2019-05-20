@@ -127,24 +127,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         return new CorsFilter(source);
     }
-
-    // 以下不知为何不起作用，引以为戒
-//    @Override
-//    public void configure(WebSecurity web) throws Exception {
-//        web
-//                .ignoring()
-//                .antMatchers(
-//                        HttpMethod.POST,
-//                        "/login", "/signin"
-//                )
-//                .and()
-//                .ignoring()
-//                .antMatchers(HttpMethod.GET,  //允许对静态资源的无授权访问
-//                        "/*.html",
-//                        "/favicon.ico",
-//                        "/**/*.html",
-//                        "/**/*.css",
-//                        "/**/*.js");
-//    }
-
 }

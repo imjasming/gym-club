@@ -14,16 +14,6 @@ import java.util.Set;
  * Created on 2019/05/13 00:43.
  */
 public class OAuthClientDetails implements ClientDetails {
-    /*private String clientId;
-    private String clientSecret;
-    private Set<String> scope;
-    private Set<String> authorizedGrantTypes;
-    private Set<String> autoApproveScopes;
-    private Set<String> resourceIds;
-    private Map<String, Object> additionalInformation;
-    private Set<String> registeredRedirectUris;
-    private List<GrantedAuthority> authorities;*/
-
     private final OauthClient client;
 
     public OAuthClientDetails(OauthClient client) {

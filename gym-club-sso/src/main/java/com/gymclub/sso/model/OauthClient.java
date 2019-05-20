@@ -35,9 +35,6 @@ public class OauthClient {
     private String autoapprove;
     private String additionalInformation;
 
-    //private Set<String> autoApproveScopes;
-
-
     public String getClientId() {
         return clientId;
     }

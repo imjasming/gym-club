@@ -6,6 +6,7 @@ import org.springframework.core.annotation.Order;
 /**
  * @author Xiaoming.
  * Created on 2019/05/19 03:01.
+ * 跨域配置
  */
 @Configuration
 @Order(1)

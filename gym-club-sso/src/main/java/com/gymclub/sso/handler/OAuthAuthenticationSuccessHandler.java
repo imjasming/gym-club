@@ -44,8 +44,6 @@ public class OAuthAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-
-
         OAuth2Request oAuth2Request = getOAuth2Request(request, response, authentication);
 
         OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(oAuth2Request, authentication);
@@ -69,11 +67,11 @@ public class OAuthAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
         String clientSecret = tokens[1];
 
         ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
-
-        String oauthClientSecret = clientDetails.getClientSecret();
         if (clientDetails == null) {
             throw new UnapprovedClientAuthenticationException("clientId对应的配置信息不存在:" + clientId);
-        } else if (clientSecret != null && oauthClientSecret != null && !clientSecret.equals(oauthClientSecret.substring(6, 12))) {
+        }
+        String oauthClientSecret = clientDetails.getClientSecret();
+        if (clientSecret != null && oauthClientSecret != null && !clientSecret.equals(oauthClientSecret.substring(6, 12))) {
             throw new UnapprovedClientAuthenticationException("clientSecret不匹配:" + clientId);
         }
 
@@ -97,20 +95,4 @@ public class OAuthAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
         }
         return new String[]{token.substring(0, delim), token.substring(delim + 1)};
     }
-/*
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
-        logger.info("oauth2 login success");
-        //getRedirectStrategy().sendRedirect(request, response, "http://127.0.0.1:8088/#/me/profile" + request.getParameter("state"));
-
-        response.getWriter().println(JSON.toJSONString("success"));
-        log.info("from: {}:{}, request: {} {} {}, cookies: {}",
-                request.getRemoteAddr(),
-                request.getRemotePort(),
-                request.getMethod(),
-                request.getRequestURL(),
-                JSON.toJSONString(request.getParameterMap()),
-                JSON.toJSONString(request.getCookies())
-        );
-    }*/
 }
