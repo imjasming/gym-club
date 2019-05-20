@@ -1,0 +1,4 @@
+rootProject.name = 'gym-club'
+include 'gym-club-core'
+include 'gym-club-sso'
+

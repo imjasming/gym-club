@@ -1,0 +1,1 @@
+INSERT INTO `oauth_client_details` VALUES ('client',NULL,NULL,NULL,'password,authorization_code,refresh_token',NULL,'{noop}secret',NULL,NULL,'all',NULL);

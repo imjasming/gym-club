@@ -1,0 +1,35 @@
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation("org.springframework.boot:spring-boot-starter-cache")
+    //implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'mysql:mysql-connector-java'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation('org.springframework.boot:spring-boot-starter-jdbc')
+    runtimeOnly('org.springframework.boot:spring-boot-devtools')
+    //redis-cache 工具类
+    implementation('com.google.guava:guava:20.0')
+    implementation('cn.hutool:hutool-all:4.1.0')
+    implementation('org.apache.commons:commons-pool2:2.0')
+
+    //H2
+    implementation('com.h2database:h2:1.4.197')
+
+    // swagger
+    implementation('io.springfox:springfox-swagger2:2.7.0')
+    implementation('io.springfox:springfox-swagger-ui:2.7.0')
+
+    //HATEOAS
+    implementation('org.springframework.boot:spring-boot-starter-hateoas')
+
+}
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.gymclub.core.GymClubSystemApplication'
+    }
+}
