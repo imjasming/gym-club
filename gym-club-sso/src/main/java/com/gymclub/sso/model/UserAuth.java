@@ -1,4 +1,4 @@
-package com.gymclub.core.domain.primary;
+package com.gymclub.sso.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;

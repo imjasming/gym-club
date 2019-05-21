@@ -1,4 +1,4 @@
-package com.gymclub.core.domain;
+package com.gymclub.sso.model;
 
 import lombok.Data;
 
@@ -8,9 +8,7 @@ public class UserEntity {
      * id
      */
     private int id;
-    /**
-     * 姓名
-     */
+
     private String loginName;
     /**
      * 登录名
