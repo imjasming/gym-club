@@ -29,7 +29,7 @@ public class MyResourcesServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         // 登录的时候我们只要提交的action，不要跳转到登录页
         http.formLogin()
-                //登录页面，前后端分离用不到，只需自定义 FailureHandler
+                //登录页面，前后端分离用不到，只需自定义 FailureHandler，只作登陆失败跳转
                 .loginPage("/auth/login")
                 // 登录提交action，app会用到
                 // 用户名登录地址

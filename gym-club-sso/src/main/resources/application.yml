@@ -15,12 +15,16 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
     properties:
       hibernate:
         format_sql: true
         hbm2ddl:
           auto: update
-    database-platform: org.hibernate.dialect.MySQLDialect
+    # 解决 SQLSyntaxErrorException 错误：ddl 建表语句 ) type=MyISAM" via JDBC Statement，
+    # type=MyISAM 在4.x 被提示过时， Mysql 5.5 被移除，
+    # 详见 https://stackoverflow.com/questions/43716068/invalid-syntax-error-type-myisam-in-ddl-generated-by-hibernate
+    database-platform: org.hibernate.dialect.MySQL5Dialect
   redis:
     database: 0
     host: 127.0.0.1
