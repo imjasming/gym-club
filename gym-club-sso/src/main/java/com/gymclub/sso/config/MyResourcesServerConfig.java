@@ -66,5 +66,6 @@ public class MyResourcesServerConfig extends ResourceServerConfigurerAdapter {
                 .authenticated()
                 .and().cors()
                 .and().csrf().disable();
+        // 以上在 webSecurityConfig 已配置过，但好像没用，故重新在 ResourceServerConfig 再次配一次，艹
     }
 }

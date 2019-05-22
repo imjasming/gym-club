@@ -216,6 +216,11 @@ public class DataServiceImpl implements DataService {
         userRepository.delete(umUser);
     }
 
+    /**
+     * @Cache 使用有风险，移植（修改）需谨慎 —— 从 Redis 反序列化对象会加上缓存时的包的前缀，
+     * 如 com.xiaoming.domain.User,但若在缓存之后改为 com.chengweishadiao.User，则会
+     * 报错 NotSuchClassException。解决方法：清空 Redis 相关值，艹
+     */
     @Override
     //@Cacheable(value = "gymPages", key = "#pageNo")
     public Page<Gym> pagingGyms(int pageNo, int pageSize) {

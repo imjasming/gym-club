@@ -41,6 +41,8 @@ public class OauthClient {
 
     public Set<String> getResourceIds() {
         if (resourceIds != null) {
+            // TODO: split效率较低，可优化（如：indexOf() + subString();
+            // TODO: 整段代码都需优化
             String[] var = resourceIds.split(",");
             return Arrays.stream(var).collect(Collectors.toSet());
         }

@@ -40,9 +40,12 @@ public class PrimaryConfig {
     @Autowired
     private HibernateProperties hibernateProperties;
 
-    /**
-     *  这里其实不需要配置数据库的方言.
-     *  像hibernate.hbm2ddl.auto 可以在这里配置.但是我的是在application.properties中配置的.
+    /** ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+     *  以下 JpaProperties.getHibernateProperties() 在 2.1.X 版本已弃用，
+     *  解决方案：使用 HibernateProperties，在 entityManagerFactory 方法，以
+     *          hibernateProperties.determineHibernateProperties(jpaProperties.getProperties(), new HibernateSettings())
+     *          的值，作 EntityManagerFactoryBuilder.properties() 的参数，
+     *          详见 https://github.com/spring-projects/spring-boot/issues/15278 官方解答
      */
     /*private Map<String, Object> getVendorProperties() {
         HibernateSettings hibernateSettings = new HibernateSettings();
