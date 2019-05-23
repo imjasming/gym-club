@@ -1,4 +1,4 @@
-package com.gymclub.core.dto;
+package com.gymclub.sso.dto;
 
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;

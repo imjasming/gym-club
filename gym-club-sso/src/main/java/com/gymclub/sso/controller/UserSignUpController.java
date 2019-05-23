@@ -1,10 +1,8 @@
-package com.gymclub.core.controller;
+package com.gymclub.sso.controller;
 
-import com.gymclub.core.domain.primary.UmUser;
-import com.gymclub.core.dto.UserSignUpRequest;
-import com.gymclub.core.service.UserService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import com.gymclub.sso.dto.UserSignUpRequest;
+import com.gymclub.sso.model.UmUser;
+import com.gymclub.sso.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,10 +18,10 @@ public class UserSignUpController {
     @Autowired
     private UserService userService;
 
-    @ApiOperation("sign up")
+    //@ApiOperation("sign up")
     @PostMapping(path = "/register")
     public ResponseEntity signUp(
-            @ApiParam(required = true, name = "user sign up params", value = "{username, email, password}")
+            //@ApiParam(required = true, name = "user sign up params", value = "{username, email, password}")
             @RequestBody UserSignUpRequest request) {
         UmUser user = userService.register(request);
         if (user != null) {

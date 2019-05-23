@@ -1,11 +1,8 @@
 package com.gymclub.core.service.impl;
 
-import com.gymclub.core.domain.primary.Role;
 import com.gymclub.core.domain.primary.UmUser;
 import com.gymclub.core.domain.secondary.UserInfo;
 import com.gymclub.core.dto.UserProfile;
-import com.gymclub.core.dto.UserSignUpRequest;
-import com.gymclub.core.repository.primary.MyRoleRepository;
 import com.gymclub.core.repository.primary.UserRepository;
 import com.gymclub.core.repository.secondary.UserInfoRepository;
 import com.gymclub.core.service.UserService;
@@ -15,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
 
 /**
  * @author Xiaoming.
@@ -32,64 +27,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserInfoRepository userInfoRepository;
 
-    @Autowired
-    private MyRoleRepository roleRepository;
-
-    //@Autowired
-    //private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-
     /*@Autowired
     private AuthUserDetailsService userDetailsService;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;*/
 
-    private void formalAddUserRole(UmUser umUser, Role.RoleName rname) {
-        if (roleRepository.existsById(1)) {
-            umUser.getRoles().add(roleRepository.findByName(rname));
-            userRepository.save(umUser);
-        } else {
-            Role role1 = new Role(Role.RoleName.ROLE_USER);
-            Role role2 = new Role(Role.RoleName.ROLE_ADMIN);
-            roleRepository.save(role1);
-            roleRepository.save(role2);
-
-            umUser.getRoles().add(roleRepository.findByName(rname));
-            userRepository.save(umUser);
-        }
-    }
-
-    @Override
-    public UmUser createUser(UserSignUpRequest signUpParam) {
-        UmUser newUser = new UmUser();
-        BeanUtils.copyProperties(signUpParam, newUser);
-
-        final String password = signUpParam.getPassword();
-        if (password != null) {
-            /*final String rawPassword = passwordEncoder.encode(password);
-            newUser.setPassword(rawPassword);*/
-        }
-        final String githubId = signUpParam.getGithubId();
-        if (githubId != null) {
-            newUser.setGithubId(githubId);
-        }
-        newUser.setLastPasswordReset(new Date());
-        newUser.setEnable(true);
-
-        formalAddUserRole(newUser, Role.RoleName.ROLE_USER);
-        return newUser;
-    }
-
-    @Override
-    public UmUser register(UserSignUpRequest signUpParam) {
-        if (userRepository.findByUsername(signUpParam.getUsername()) != null || userRepository.findByEmail(signUpParam.getEmail()) != null) {
-            log.warn("username or email exited: {} {}", signUpParam.getUsername(), signUpParam.getEmail());
-            return null;
-        }
-
-        return createUser(signUpParam);
-    }
 
     /*@Override
     public String login(String username, String password) {
