@@ -78,5 +78,12 @@ front-end:
 
 gymclub:
   security:
-    oauth2:
+    oauth2-token:
       storeType: redis
+    oauth2:
+      github:
+        provider-id: github
+        client-id: de87e995aa6c1c726646
+        client-secrect: 5e0aadf8a2b9203e318fc2b4e938862d255efbea
+        authorization-uri: https://github.com/login/oauth/authorize
+        token-uri: https://github.com/login/oauth/access_token

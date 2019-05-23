@@ -1,4 +1,4 @@
-package com.gymclub.sso.oauth.github;
+package com.gymclub.sso.oauth.github.model;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

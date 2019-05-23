@@ -13,7 +13,7 @@ import org.springframework.security.oauth2.provider.token.store.redis.RedisToken
  * Created on 2019/05/19 00:43.
  */
 @Configuration
-@ConditionalOnProperty(prefix = "gymclub.security.oauth2", name = "storeType", havingValue = "redis")
+@ConditionalOnProperty(prefix = "gymclub.security.oauth2-token", name = "storeType", havingValue = "redis")
 public class RedisTokenStoreConfig {
     @Autowired
     private RedisConnectionFactory redisConnectionFactory;
