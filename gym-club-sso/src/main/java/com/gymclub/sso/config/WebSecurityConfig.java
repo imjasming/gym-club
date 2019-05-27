@@ -1,6 +1,7 @@
 package com.gymclub.sso.config;
 
 import com.gymclub.sso.component.RestAuthenticationEntryPoint;
+import com.gymclub.sso.handler.FormLoginAuthenticationSuccessHandler;
 import com.gymclub.sso.jwt.JwtAuthenticationTokenFilter;
 import com.gymclub.sso.service.AuthUserDetailsService;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private RestAuthenticationEntryPoint authenticationEntryPoint;
     @Autowired
-    private com.gymclub.sso.handler.OAuthAuthenticationSuccessHandler OAuthAuthenticationSuccessHandler;
+    private FormLoginAuthenticationSuccessHandler FormLoginAuthenticationSuccessHandler;
 //    @Autowired
 //    OAuth2ClientContext oauth2ClientContext;
 
@@ -69,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/*.png"
                 ).permitAll()
                 .antMatchers("/swagger-resources/**", "/v2/api-docs/**").permitAll()  // swagger资源
-                .antMatchers("/auth/**", "/register", "/oauth2/**", "/greeting").permitAll()// 对登录注册要允许匿名访问
+                .antMatchers("/auth/**", "/connect/**", "/register", "/oauth2/**", "/greeting").permitAll()// 对登录注册要允许匿名访问
                 .antMatchers(HttpMethod.OPTIONS).permitAll()//跨域请求会先进行一次options请求
                 .anyRequest().authenticated()  // 除上面外的所有请求全部需要鉴权认证
                 .and()
@@ -80,7 +81,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         log.info("=========== security 授权路径配置完毕 ============");
 
         http.oauth2Login()
-                .successHandler(OAuthAuthenticationSuccessHandler)
+                .successHandler(FormLoginAuthenticationSuccessHandler)
         ;
 
         http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);

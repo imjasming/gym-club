@@ -3,6 +3,11 @@ jwt:
   secret: xmJwtSecret
   tokenHead: 'Bearer '
   tokenHeader: Authorization
+
+mybatis:
+  mapper-locations:
+    - classpath:mybatis/mapper/*.xml
+    - classpath*:com/**/mapper/*.xml
 server:
   port: 8082
 spring:
@@ -11,11 +16,9 @@ spring:
     password: 123456
     username: test
     url: jdbc:mysql://localhost:3306/spring_test?useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
-
   jpa:
     hibernate:
       ddl-auto: update
-
     properties:
       hibernate:
         format_sql: true
@@ -84,6 +87,12 @@ gymclub:
       github:
         provider-id: github
         client-id: de87e995aa6c1c726646
-        client-secrect: 5e0aadf8a2b9203e318fc2b4e938862d255efbea
+        client-secret: 5e0aadf8a2b9203e318fc2b4e938862d255efbea
         authorization-uri: https://github.com/login/oauth/authorize
         token-uri: https://github.com/login/oauth/access_token
+    social:
+      register-url: /social/signUp
+      filter-processes-url: /social-login
+      bind-url: /social-bind/qq
+      callback-url: /connect/github
+      connect-url: /social-connect

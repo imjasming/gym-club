@@ -29,8 +29,8 @@ import java.util.HashMap;
  * Created on 2019/05/10 16:23.
  */
 @Slf4j
-@Component("oAuthAuthenticationSuccessHandler")
-public class OAuthAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+@Component("formLoginAuthenticationSuccessHandler")
+public class FormLoginAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     @Value("${front-end.login-success-redirect-uri}")
     private String FRONT_END_REDIRECT_URI;
 

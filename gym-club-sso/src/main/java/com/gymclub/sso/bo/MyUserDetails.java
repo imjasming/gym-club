@@ -5,6 +5,7 @@ import com.gymclub.sso.model.UmUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.social.security.SocialUserDetails;
 
 import java.util.Collection;
 import java.util.Date;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
  * @author Xiaoming.
  * Created on 2019/03/14 01:10.
  */
-public class MyUserDetails implements UserDetails {
+public class MyUserDetails implements UserDetails, SocialUserDetails {
     private final UmUser user;
 
     public MyUserDetails(UmUser user) {
@@ -65,5 +66,10 @@ public class MyUserDetails implements UserDetails {
     @JsonIgnore
     public Date getLastPasswordResetDate() {
         return user.getLastPasswordReset();
+    }
+
+    @Override
+    public String getUserId() {
+        return user.getUsername();
     }
 }

@@ -2,12 +2,14 @@ package com.gymclub.sso.model;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class UserEntity {
     /**
      * id
      */
-    private int id;
+    private Integer id;
 
     private String loginName;
     /**
@@ -15,28 +17,21 @@ public class UserEntity {
      */
     private String username;
     /**
-     * 密码
-     */
-    private String password;
-    /**
      *
      */
     private String email;
     /**
      * 头像url
      */
-    private String headimg;
+    private String avatarUrl;
     /**
-     * GitHub主页
+     * 主页
      */
     private String url;
     /**
      * 注册时间
      */
-    private String createTime;
+    private Date createTime;
 
-    private String githubid;
-
-    private Integer status;
-
+    private Boolean status;
 }

@@ -16,7 +16,7 @@ import org.springframework.social.connect.ConnectionFactory;
 public class GithubAutoConfig extends SocialAutoConfigurerAdapter {
     @Value("${gymclub.security.oauth2.github.provider-id}")
     private String providerId;
-    @Value("${gymclub.security.oauth2.github.provider-id}")
+    @Value("${gymclub.security.oauth2.github.client-id}")
     private String clientId;
     @Value("${gymclub.security.oauth2.github.client-secret}")
     private String clientSecret;

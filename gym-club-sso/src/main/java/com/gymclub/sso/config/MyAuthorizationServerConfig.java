@@ -62,6 +62,7 @@ public class MyAuthorizationServerConfig extends AuthorizationServerConfigurerAd
         clients
                 // JDBC
                 //.jdbc(primary)
-                .withClientDetails(oauthClientDetailsService);
+                .withClientDetails(oauthClientDetailsService)
+        ;
     }
 }

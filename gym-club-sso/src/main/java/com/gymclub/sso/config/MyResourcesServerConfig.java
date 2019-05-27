@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.social.security.SpringSocialConfigurer;
 
 /**
  * @author Xiaoming.
@@ -18,32 +19,31 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @EnableResourceServer
 public class MyResourcesServerConfig extends ResourceServerConfigurerAdapter {
     @Autowired
-    protected AuthenticationSuccessHandler authenticationSuccessHandler;
-
+    protected AuthenticationSuccessHandler formLoginAuthenticationSuccessHandler;
     @Autowired
     protected AuthenticationFailureHandler authenticationFailureHandler;
-
-    //@Autowired
-    //private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
+    @Autowired
+    private SpringSocialConfigurer mySocialSecurityConfig;
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
         // 登录的时候我们只要提交的action，不要跳转到登录页
         http.formLogin()
                 //登录页面，前后端分离用不到，只需自定义 FailureHandler，只作登陆失败跳转
-                .loginPage("/auth/login")
+                //.loginPage("/auth/login")
                 // 登录提交action，app会用到
                 // 用户名登录地址
                 .loginProcessingUrl("/auth/form/token")
                 //成功处理器 返回Token
-                .successHandler(authenticationSuccessHandler)
+                .successHandler(formLoginAuthenticationSuccessHandler)
                 //失败处理器
                 .failureHandler(authenticationFailureHandler);
 
         http
+                .apply(mySocialSecurityConfig)
                 // 手机验证码登录
                 //.apply(smsCodeAuthenticationSecurityConfig)
-                //.and()
+                .and()
                 .authorizeRequests()
                 // 手机验证码登录地址
                 //.antMatchers("/mobile/token", "/email/token")
@@ -52,6 +52,7 @@ public class MyResourcesServerConfig extends ResourceServerConfigurerAdapter {
                 //.authorizeRequests()
                 .antMatchers(
                         "/sso/**",
+                        "/connect/**",
                         "/auth/**",
                         "/register",
                         "/social/**",
