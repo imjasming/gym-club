@@ -10,7 +10,7 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 
     implementation('org.springframework.boot:spring-boot-starter-jdbc')
-    //runtimeOnly('org.springframework.boot:spring-boot-devtools')
+    runtimeOnly('org.springframework.boot:spring-boot-devtools')
 
     //implementation('org.springframework.security:spring-security-oauth2-core:5.0.0.RELEASE')
     //implementation('org.springframework.security:spring-security-oauth2-client:5.0.0.RELEASE')

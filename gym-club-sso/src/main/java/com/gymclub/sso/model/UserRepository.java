@@ -20,8 +20,6 @@ import java.util.List;
 @EntityScan("com.gymclub.core.domain.primary")
 public interface UserRepository extends JpaRepository<UmUser, Integer> , JpaSpecificationExecutor<UmUser> {
 
-    UmUser findByGithubId(String id);
-
     UmUser findByUsername(String username);
 
     List<UmUser> findAllByUsername(String username);
@@ -39,11 +37,6 @@ public interface UserRepository extends JpaRepository<UmUser, Integer> , JpaSpec
     @Modifying
     @Query("UPDATE UmUser u set u.email = :email where u.username = :username")
     void updateUmUserEmail(@Param("username") String username, @Param("email") String email);
-
-
-    @Modifying
-    @Query("UPDATE UmUser u set u.gym = null where u.username = :username")
-    void updateUmUserGymIsNull(@Param("username") String username);
 
 
     @Modifying

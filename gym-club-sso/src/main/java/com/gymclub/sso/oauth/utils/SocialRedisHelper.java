@@ -1,5 +1,7 @@
 package com.gymclub.sso.oauth.utils;
 
+import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.social.connect.Connection;
@@ -15,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 将第三方用户信息保存到redis里面
  */
+@Slf4j
 @Component
 public class SocialRedisHelper {
 
@@ -52,6 +55,10 @@ public class SocialRedisHelper {
         ConnectionData connectionData = (ConnectionData) redisTemplate.opsForValue().get(key);
         Connection<?> connection = connectionFactoryLocator.getConnectionFactory(connectionData.getProviderId())
                 .createConnection(connectionData);
+
+        log.info("redisHelper - doPostSignUp: connectionData {}", JSON.toJSONString(connectionData));
+
+        //TODO: create a new user in user db, then get the userId
         usersConnectionRepository.createConnectionRepository(userId).addConnection(connection);
         redisTemplate.delete(key);
     }

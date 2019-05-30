@@ -30,7 +30,7 @@ public class MyResourcesServerConfig extends ResourceServerConfigurerAdapter {
         // 登录的时候我们只要提交的action，不要跳转到登录页
         http.formLogin()
                 //登录页面，前后端分离用不到，只需自定义 FailureHandler，只作登陆失败跳转
-                //.loginPage("/auth/login")
+                .loginPage("/auth/login")
                 // 登录提交action，app会用到
                 // 用户名登录地址
                 .loginProcessingUrl("/auth/form/token")
@@ -52,6 +52,7 @@ public class MyResourcesServerConfig extends ResourceServerConfigurerAdapter {
                 //.authorizeRequests()
                 .antMatchers(
                         "/sso/**",
+                        "/signup/**",
                         "/connect/**",
                         "/auth/**",
                         "/register",

@@ -1,9 +1,7 @@
 package com.gymclub.sso.oauth.github.config;
 
 import com.gymclub.sso.oauth.SocialAutoConfigurerAdapter;
-import com.gymclub.sso.oauth.github.connect.GithubAdapter;
 import com.gymclub.sso.oauth.github.connect.GithubConnectionFactory;
-import com.gymclub.sso.oauth.github.connect.GithubServiceProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.social.connect.ConnectionFactory;
@@ -24,6 +22,6 @@ public class GithubAutoConfig extends SocialAutoConfigurerAdapter {
     @Override
     protected ConnectionFactory<?> createConnectionFactory() {
 
-        return new GithubConnectionFactory(providerId, new GithubServiceProvider(clientId, clientSecret), new GithubAdapter());
+        return new GithubConnectionFactory(providerId, clientId, clientSecret);
     }
 }

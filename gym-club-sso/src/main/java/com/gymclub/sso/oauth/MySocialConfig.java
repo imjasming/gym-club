@@ -93,11 +93,6 @@ public class MySocialConfig extends SocialConfigurerAdapter {
         return new ProviderSignInUtils(connectionFactoryLocator, getUsersConnectionRepository(connectionFactoryLocator));
     }
 
-    /*@Bean
-    public ConnectController connectController(ConnectionFactoryLocator connectionFactoryLocator, ConnectionRepository connectionRepository){
-        return new ConnectController(connectionFactoryLocator, connectionRepository);
-    }*/
-
     @Override
     public UserIdSource getUserIdSource() {
         return new AuthenticationNameUserIdSource();

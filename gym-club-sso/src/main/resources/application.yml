@@ -8,6 +8,9 @@ mybatis:
   mapper-locations:
     - classpath:mybatis/mapper/*.xml
     - classpath*:com/**/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
 server:
   port: 8082
 spring:
@@ -91,8 +94,8 @@ gymclub:
         authorization-uri: https://github.com/login/oauth/authorize
         token-uri: https://github.com/login/oauth/access_token
     social:
-      register-url: /social/signUp
-      filter-processes-url: /social-login
-      bind-url: /social-bind/qq
-      callback-url: /connect/github
-      connect-url: /social-connect
+      register-url: /signup/social
+      filter-processes-url: /auth/social
+      bind-url: /social/bind
+      callback-url: /auth/social
+      connect-url: /connect

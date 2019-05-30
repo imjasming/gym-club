@@ -16,7 +16,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
@@ -53,8 +52,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //使用JWT，无需csrf
                 .csrf().disable()
                 //don't create session
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                //.and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, // 允许对于网站静态资源的无授权访问
                         "/",
@@ -70,7 +69,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/*.png"
                 ).permitAll()
                 .antMatchers("/swagger-resources/**", "/v2/api-docs/**").permitAll()  // swagger资源
-                .antMatchers("/auth/**", "/connect/**", "/register", "/oauth2/**", "/greeting").permitAll()// 对登录注册要允许匿名访问
+                .antMatchers("/signup/**", "/social/**", "/auth/**", "/connect/**", "/register", "/oauth2/**", "/greeting").permitAll()// 对登录注册要允许匿名访问
                 .antMatchers(HttpMethod.OPTIONS).permitAll()//跨域请求会先进行一次options请求
                 .anyRequest().authenticated()  // 除上面外的所有请求全部需要鉴权认证
                 .and()

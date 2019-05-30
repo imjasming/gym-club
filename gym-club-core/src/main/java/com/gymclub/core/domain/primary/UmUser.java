@@ -38,8 +38,6 @@ public class UmUser implements Serializable {
 
     private String nickname;
 
-    private String githubId;
-
     @Column
     private Date lastPasswordReset;
 
@@ -54,10 +52,6 @@ public class UmUser implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     @JsonIgnoreProperties(ignoreUnknown = true, value = {"users"})
     private List<Role> roles = new LinkedList<>();
-
-    @JoinColumn(name="GYM_ID")
-    @ManyToOne(cascade = {CascadeType.MERGE})
-    private Gym gym;
 
     @JoinTable(name = "user_trainer_relation", joinColumns = {@JoinColumn(name = "uid", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "tid", referencedColumnName = "id")})

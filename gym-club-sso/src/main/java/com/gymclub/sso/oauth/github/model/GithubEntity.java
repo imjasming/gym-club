@@ -2,11 +2,10 @@ package com.gymclub.sso.oauth.github.model;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Data
-@Entity
+//@Entity
 public class GithubEntity {
 
     private String gistsUrl;
@@ -31,7 +30,7 @@ public class GithubEntity {
     private Integer id;
     private Integer publicRepos;
     private String gravatarId;
-    private String plan;
+    private GithubPlan plan;
     private String email;
     private String organizationsUrl;
     private String hireable;
@@ -50,5 +49,47 @@ public class GithubEntity {
     private String nodeId;
 
     public GithubEntity() {
+    }
+
+    public class GithubPlan {
+        private String name;
+        private Integer space;
+        private Integer collaborators;
+        private Integer privateRepos;
+
+        public GithubPlan() {
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public Integer getSpace() {
+            return space;
+        }
+
+        public void setSpace(Integer space) {
+            this.space = space;
+        }
+
+        public Integer getCollaborators() {
+            return collaborators;
+        }
+
+        public void setCollaborators(Integer collaborators) {
+            this.collaborators = collaborators;
+        }
+
+        public Integer getPrivateRepos() {
+            return privateRepos;
+        }
+
+        public void setPrivateRepos(Integer privateRepos) {
+            this.privateRepos = privateRepos;
+        }
     }
 }

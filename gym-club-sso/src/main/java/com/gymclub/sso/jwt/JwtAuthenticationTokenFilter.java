@@ -1,8 +1,15 @@
 package com.gymclub.sso.jwt;
 
 import com.alibaba.fastjson.JSON;
+import com.gymclub.sso.service.AuthUserDetailsService;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -23,16 +30,16 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private String tokenHeader;
     @Value("${jwt.tokenHead}")
     private String tokenHead;
-    //@Autowired
-    //private JwtTokenUtil jwtTokenUtil;
-    //@Autowired
-    //private AuthUserDetailsService userDetailsService;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private AuthUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         final String authHead = request.getHeader(this.tokenHeader);
-        /*if (authHead != null && authHead.startsWith(this.tokenHead)) {
+        if (authHead != null && authHead.startsWith(this.tokenHead)) {
 
             // the part after "Bearer "
             String authToken = authHead.substring(JwtTokenUtil.TOKEN_HEAD_LENGTH);
@@ -61,7 +68,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 }
             }
         }
-*/
+
         log.info("from: {}:{}, request: {} {} {}, cookies: {}",
                 request.getRemoteAddr(),
                 request.getRemotePort(),

@@ -1,6 +1,5 @@
 package com.gymclub.sso.oauth.github.api.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.gymclub.sso.oauth.github.api.GithubApi;
 import com.gymclub.sso.oauth.github.model.GithubEntity;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +26,8 @@ public class GithubOAuth2ApiBinding extends AbstractOAuth2ApiBinding implements 
 
     public GithubEntity getGithubEntity() {
 
-        String response = getRestTemplate().getForObject(USER_INFO_URL_TEMP, String.class);
-        return JSON.parseObject(response, GithubEntity.class);
+        GithubEntity response = getRestTemplate().getForObject(USER_INFO_URL_TEMP, GithubEntity.class);
+        log.info("===== github entity: {}", response);
+        return response;
     }
 }

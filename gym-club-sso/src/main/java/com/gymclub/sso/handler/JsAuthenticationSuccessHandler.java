@@ -1,5 +1,8 @@
 package com.gymclub.sso.handler;
 
+import com.alibaba.fastjson.JSON;
+import com.gymclub.sso.jwt.JwtTokenUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -16,6 +19,7 @@ import java.io.IOException;
 /**
  * 交给前端使用的认证成功处理器
  */
+@Slf4j
 @Component("jsAuthenticationSuccessHandler")
 public class JsAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     @Value("${gymclub.security.social.callback-url}")
@@ -27,6 +31,8 @@ public class JsAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
 
     @Autowired
     private JwtAccessTokenConverter jwtAccessTokenConverter;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     /**
      * 通过验证生成token
@@ -44,12 +50,16 @@ public class JsAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
         try {
             UserDetails user = (UserDetails) authentication.getPrincipal();
 
+            log.info("oauth login: userDetails: {}", JSON.toJSONString(user));
+
             // 生成 token
             //String token = jwtAccessTokenConverter.convertAccessToken()
+            String token = jwtTokenUtil.generateToken(user);
             // 社交登录成功跳转到成功页面
-            response.sendRedirect(callbackUrl + "?token=" + "test");
+            getRedirectStrategy().sendRedirect(request, response, "http://127.0.0.1:8088/#/me/profile?token=" + token);
+            //response.sendRedirect(callbackUrl + "?token=" + "test");
         } catch (Exception ex) {
-            logger.info(ex.getMessage());
+            log.info(ex.getMessage(), ex);
 //            throw new DomainException(ResultCode.USER_AUTH_FAILD);
         }
     }

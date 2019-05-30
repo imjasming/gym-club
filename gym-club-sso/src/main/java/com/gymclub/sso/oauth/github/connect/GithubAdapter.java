@@ -28,8 +28,8 @@ public class GithubAdapter implements ApiAdapter<GithubApi> {
 
     @Override
     public UserProfile fetchUserProfile(GithubApi api) {
-        //TODO
-        return null;
+        GithubEntity entity = api.getGithubEntity();
+        return new UserProfile(entity.getId().toString(), entity.getName(), null, null, entity.getEmail(), entity.getLogin());
     }
 
     @Override

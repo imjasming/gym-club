@@ -1,6 +1,8 @@
 package com.gymclub.sso.controller;
 
+import com.gymclub.sso.dto.SocialConnectionStatus;
 import com.gymclub.sso.oauth.utils.SocialRedisHelper;
+import com.gymclub.sso.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +59,11 @@ public class ConnectController implements InitializingBean {
     @Autowired
     private SocialRedisHelper socialRedisHelper;
 
+    //@Autowired
+    //private UserDao userDao;
+    @Autowired
+    private UserService userService;
+
     @Inject
     public ConnectController(ConnectionFactoryLocator connectionFactoryLocator, ConnectionRepository connectionRepository) {
         this.connectionFactoryLocator = connectionFactoryLocator;
@@ -96,11 +103,12 @@ public class ConnectController implements InitializingBean {
     public ResponseEntity<?> connectionStatus(NativeWebRequest request) {
         this.setNoCache(request);
         Map<String, List<Connection<?>>> connections = this.connectionRepository.findAllConnections();
-        Map<String, Boolean> result = new HashMap<>();
+        LinkedList<SocialConnectionStatus> statuses = new LinkedList<>();
+        SocialConnectionStatus connectStatus = new SocialConnectionStatus();
         for (String key : connections.keySet()) {
-            result.put(key, !connections.get(key).isEmpty());
+            statuses.add(connectStatus.withProvider(key).withStatus(!connections.get(key).isEmpty()));
         }
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(statuses);
     }
 
     /**
@@ -114,14 +122,7 @@ public class ConnectController implements InitializingBean {
     @PostMapping(value = {"/{providerId}"})
     public ResponseEntity<?> connect(@PathVariable String providerId, NativeWebRequest request) {
         HttpServletRequest nativeRequest = request.getNativeRequest(HttpServletRequest.class);
-
-        Principal user;
-        if (nativeRequest != null) {
-            user = nativeRequest.getUserPrincipal();
-        } else {
-            return null;
-        }
-
+        Principal user = nativeRequest.getUserPrincipal();
         ConnectionFactory<?> connectionFactory = this.connectionFactoryLocator.getConnectionFactory(providerId);
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap();
         this.preConnect(connectionFactory, parameters, request);
@@ -129,15 +130,12 @@ public class ConnectController implements InitializingBean {
             String social_connect_url = this.connectSupport.buildOAuthUrl(connectionFactory, request, parameters);
             String state = (String) this.sessionStrategy.getAttribute(request, "oauth2State");
             this.sessionStrategy.removeAttribute(request, "oauth2State");
-
-            if (user != null) {
-                socialRedisHelper.saveStateUserId(state, user.getName());
-            }
+            socialRedisHelper.saveStateUserId(state, user.getName());
             return ResponseEntity.ok(social_connect_url);
         } catch (Exception e) {
             this.sessionStrategy.setAttribute(request, "social_provider_error", e);
             log.error(e.getMessage(), e);
-            return null;
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -155,6 +153,11 @@ public class ConnectController implements InitializingBean {
         return request.getServletPath() + (pathInfo != null ? pathInfo : "");
     }
 
+    /**
+     * @param providerId 3th part provider identify
+     * @param request    httpRequest
+     * @param response   httpResponse
+     */
     @GetMapping(value = {"/{providerId}"}, params = {"code"})
     public void oauth2Callback(@PathVariable String providerId, NativeWebRequest request, HttpServletResponse response) {
         try {
@@ -166,10 +169,8 @@ public class ConnectController implements InitializingBean {
             AccessGrant accessGrant = connectionFactory.getOAuthOperations().exchangeForAccess(code, this.callbackUrl(request), null);
             Connection<?> connection = connectionFactory.createConnection(accessGrant);
             String userId = socialRedisHelper.getStateUserId(state);
-            if (userId != null) {
-                jdbcConnectionRepository.createConnectionRepository(userId).addConnection(connection);
-                response.sendRedirect(connectUrl);
-            }
+            jdbcConnectionRepository.createConnectionRepository(userId).addConnection(connection);
+            response.sendRedirect(connectUrl);
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
         }
@@ -231,6 +232,7 @@ public class ConnectController implements InitializingBean {
 
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private void preConnect(ConnectionFactory<?> connectionFactory, MultiValueMap<String, String> parameters, WebRequest request) {
         Iterator i$ = this.interceptingConnectionsTo(connectionFactory).iterator();
 

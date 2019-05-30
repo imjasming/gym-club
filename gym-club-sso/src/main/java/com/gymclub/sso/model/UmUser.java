@@ -25,7 +25,8 @@ public class UmUser implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
+    @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
     private Integer id;
 
     @Column(nullable = false, unique = true, length = 50)
@@ -39,8 +40,6 @@ public class UmUser implements Serializable {
     private String email;
 
     private String nickname;
-
-    private String githubId;
 
     @Column
     private Date lastPasswordReset;
@@ -56,10 +55,6 @@ public class UmUser implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     @JsonIgnoreProperties(ignoreUnknown = true, value = {"users"})
     private List<Role> roles = new LinkedList<>();
-
-    @JoinColumn(name="GYM_ID")
-    @ManyToOne(cascade = {CascadeType.MERGE})
-    private Gym gym;
 
     @JoinTable(name = "user_trainer_relation", joinColumns = {@JoinColumn(name = "uid", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "tid", referencedColumnName = "id")})

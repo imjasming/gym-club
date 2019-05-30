@@ -9,6 +9,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
+import java.util.Objects;
 
 /**
  * @author Xiaoming.
@@ -18,6 +19,7 @@ import java.nio.charset.Charset;
 public class GithubOAuth2Template extends OAuth2Template {
     public GithubOAuth2Template(String clientId, String clientSecret, String authorizeUrl, String accessTokenUrl) {
         super(clientId, clientSecret, authorizeUrl, accessTokenUrl);
+        this.setUseParametersForClientAuthentication(true);
     }
 
     @Override
@@ -27,7 +29,7 @@ public class GithubOAuth2Template extends OAuth2Template {
         log.info("github - POST {}, response: {}", accessTokenUrl, response);
 
         String[] responseItems = StringUtils.splitByWholeSeparatorPreserveAllTokens(response, "&");
-        assert responseItems != null;
+        Objects.requireNonNull(responseItems);
         // github api 貌似只返回 access_token&token_type
         String accessToken = StringUtils.substringAfterLast(responseItems[0], "=");
 

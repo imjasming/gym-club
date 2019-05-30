@@ -16,7 +16,6 @@ public class UserSignUpRequest implements Serializable {
     private String password;
     @NotEmpty(message = "email can't be empty")
     private String email;
-    private String githubId;
 
     public UserSignUpRequest() {
     }
@@ -59,13 +58,5 @@ public class UserSignUpRequest implements Serializable {
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 '}';
-    }
-
-    public String getGithubId() {
-        return githubId;
-    }
-
-    public void setGithubId(String githubId) {
-        this.githubId = githubId;
     }
 }

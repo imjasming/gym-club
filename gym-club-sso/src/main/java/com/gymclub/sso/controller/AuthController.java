@@ -33,29 +33,11 @@ public class AuthController {
     private String tokenHead;
     @Value("${jwt.tokenHeader}")
     private String tokenHeader;
-
-
-    /*@ApiOperation("user sign in")
-    @PostMapping(path = "/login")
-    public ResponseEntity login(
-            @RequestParam(value = "username") String username,
-            @RequestParam(value = "password") String password
-    ) {
-        String token = userService.login(username, password);
-
-        if (token == null) {
-            return ResponseEntity.badRequest().body("Username or password incorrect");
-        }
-
-        log.info("user[{}] login, token: {}", username, token);
-        Map<String, String> tokenMap = new HashMap<>();
-        tokenMap.put("token", token);
-        tokenMap.put("tokenHead", tokenHead);
-        return ResponseEntity.ok(tokenMap);
-    }*/
+    @Value("${gymclub.security.social.filter-processes-url}")
+    private String oauthUrl;
 
     @RequestMapping("/login")
-    public ResponseEntity loginInfo(){
+    public ResponseEntity loginInfo() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("登录失败");
     }
 
@@ -83,40 +65,15 @@ public class AuthController {
             data.add(client);
         });*/
 
-        Map client = new HashMap();
+        StringBuffer url = request.getRequestURL();
+        url.delete(url.length() - request.getRequestURI().length(), url.length());
+        Map<String, String> client = new HashMap<>();
         client.put("clientName", "Auth with Github");
-        client.put("clientUrl", "https://github.com/login/oauth/authorize?client_id=de87e995aa6c1c726646&state=github");
+        client.put("clientUrl", url.append(oauthUrl).append("/github").toString());
 
         return
                 ResponseEntity.ok(Collections.singletonList(client))
                 //ResponseEntity.ok(data)
                 ;
     }
-/*
-    @GetMapping("/oauth2/code/{client}")
-    public ResponseEntity oauthLogin(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            @RequestParam("code") String code,
-            @RequestParam("state") String state,
-            @PathVariable("client") String client) throws IOException {
-
-        if (code == null || "".equals(code)) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        code = code.trim();
-
-        // 向github请求token后获取用户信息，并将其保存到数据库
-        String id = githubAuthentication.getUsername(code);
-        if (id == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        MyAuthenticationToken authRequest = new MyAuthenticationToken(id);
-
-        authRequest.setDetails(new OAuth2AuthenticationDetails(request));
-        // 认证处理后返回token
-        OAuth2AccessToken accessToken = loginSuccessHandler.getAccessToken(request, response, authRequest);
-        return ResponseEntity.ok(githubService.getTokenByUsername(id));
-    }*/
 }

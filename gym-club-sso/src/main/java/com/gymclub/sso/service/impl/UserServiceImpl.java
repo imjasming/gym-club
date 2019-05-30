@@ -26,22 +26,36 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
+    //@Autowired
+    //private UserDao userDao;
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    private void formalAddUserRole(UmUser umUser, Role.RoleName rname) {
-        if (roleRepository.existsById(1)) {
-            umUser.getRoles().add(roleRepository.findByName(rname));
-            userRepository.save(umUser);
-        } else {
+    private void createCommonUser(UmUser newUser, Role.RoleName rname) {
+        newUser.setLastPasswordReset(new Date());
+        newUser.setEnable(true);
+
+        if (!roleRepository.existsById(1)) {
             Role role1 = new Role(Role.RoleName.ROLE_USER);
             Role role2 = new Role(Role.RoleName.ROLE_ADMIN);
             roleRepository.save(role1);
             roleRepository.save(role2);
-
-            umUser.getRoles().add(roleRepository.findByName(rname));
-            userRepository.save(umUser);
         }
+
+        newUser.getRoles().add(roleRepository.findByName(rname));
+        userRepository.save(newUser);
+    }
+
+    @Override
+    public Integer createUser(UmUser newUser) {
+        /*if (newUser.getUsername() == null) {
+            int nextId = userDao.getNextId();
+            //newUser.setId(nextId);
+            newUser.setUsername("uid_" + nextId);
+        }
+        createCommonUser(newUser, Role.RoleName.ROLE_USER);*/
+
+        return newUser.getId();
     }
 
     @Override
@@ -54,14 +68,8 @@ public class UserServiceImpl implements UserService {
             final String rawPassword = passwordEncoder.encode(password);
             newUser.setPassword(rawPassword);
         }
-        final String githubId = signUpParam.getGithubId();
-        if (githubId != null) {
-            newUser.setGithubId(githubId);
-        }
-        newUser.setLastPasswordReset(new Date());
-        newUser.setEnable(true);
 
-        formalAddUserRole(newUser, Role.RoleName.ROLE_USER);
+        createCommonUser(newUser, Role.RoleName.ROLE_USER);
         return newUser;
     }
 

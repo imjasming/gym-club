@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gymclub.sso.dao.UserDao">
+    <resultMap id="UmUser" type="com.gymclub.sso.model.UmUser">
+        <id property="id" column="id" javaType="java.lang.Integer"/>
+        <result property="email" column="email" javaType="java.lang.String"/>
+        <result property="enable" column="enable" javaType="java.lang.Boolean"/>
+        <result property="intro" column="intro" javaType="java.lang.String"/>
+        <result property="lastPasswordReset" column="last_password_reset" javaType="java.util.Date"/>
+        <result property="nickname" column="nickname" javaType="java.lang.String"/>
+        <result property="password" column="password" javaType="java.lang.String"/>
+        <result property="username" column="username" javaType="java.lang.String"/>
+    </resultMap>
+    <resultMap id="UserInfo" type="com.gymclub.sso.model.UmUser">
+        <id property="id" column="id" javaType="java.lang.Integer"/>
+        <result property="email" column="email" javaType="java.lang.String"/>
+        <result property="enable" column="enable" javaType="java.lang.Boolean"/>
+        <result property="intro" column="intro" javaType="java.lang.String"/>
+        <result property="lastPasswordReset" column="last_password_reset" javaType="java.util.Date"/>
+        <result property="nickname" column="nickname" javaType="java.lang.String"/>
+        <result property="username" column="username" javaType="java.lang.String"/>
+    </resultMap>
+
+    <sql id="userCol">
+        email, enable, intro, last_password_reset, nickname, password, username
+    </sql>
+
+    <insert id="insert" parameterType="com.gymclub.sso.model.UmUser" keyProperty="id">
+        <selectKey keyProperty="id" resultType="integer" order="BEFORE">
+            select next_val from user_seq;
+        </selectKey>
+
+        insert into um_user(id, email, enable, intro, last_password_reset, nickname, password, username)
+        VALUES (#{id},#{email}, #{enable}, #{intro,jdbcType=VARCHAR}, #{lastPasswordReset},
+        #{nickname,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{username})
+    </insert>
+    <update id="updateNextId">
+        update user_seq
+        set next_val = next_val + 1
+    </update>
+
+    <select id="getNextId" resultType="java.lang.Integer">
+        select next_val
+        from user_seq
+    </select>
+
+
+</mapper>
