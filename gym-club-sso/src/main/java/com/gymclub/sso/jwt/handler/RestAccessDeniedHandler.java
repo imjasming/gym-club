@@ -22,7 +22,7 @@ public class RestAccessDeniedHandler implements AccessDeniedHandler {
         response.setContentType("application/json");
         response.getWriter().println(
                 JSON.toJSONString(
-                        RestResponse.forbidden(accessDeniedException.getMessage())
+                        CommonRestResult.forbidden(accessDeniedException.getMessage())
                 ));
         response.getWriter().flush();*/
     }

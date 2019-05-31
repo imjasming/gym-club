@@ -1,7 +1,7 @@
 package com.gymclub.sso.controller;
 
 import com.gymclub.sso.dto.SocialConnectionStatus;
-import com.gymclub.sso.oauth.utils.SocialRedisHelper;
+import com.gymclub.sso.oauth.utils.SocialConnectRedisHelper;
 import com.gymclub.sso.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -57,7 +57,7 @@ public class ConnectController implements InitializingBean {
     private ProviderSignInUtils providerSignInUtils;
 
     @Autowired
-    private SocialRedisHelper socialRedisHelper;
+    private SocialConnectRedisHelper socialConnectRedisHelper;
 
     //@Autowired
     //private UserDao userDao;
@@ -127,11 +127,11 @@ public class ConnectController implements InitializingBean {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap();
         this.preConnect(connectionFactory, parameters, request);
         try {
-            String social_connect_url = this.connectSupport.buildOAuthUrl(connectionFactory, request, parameters);
+            String socialConnectUrl = this.connectSupport.buildOAuthUrl(connectionFactory, request, parameters);
             String state = (String) this.sessionStrategy.getAttribute(request, "oauth2State");
             this.sessionStrategy.removeAttribute(request, "oauth2State");
-            socialRedisHelper.saveStateUserId(state, user.getName());
-            return ResponseEntity.ok(social_connect_url);
+            socialConnectRedisHelper.saveStateUserId(state, user.getName());
+            return ResponseEntity.ok(socialConnectUrl);
         } catch (Exception e) {
             this.sessionStrategy.setAttribute(request, "social_provider_error", e);
             log.error(e.getMessage(), e);
@@ -168,7 +168,7 @@ public class ConnectController implements InitializingBean {
             OAuth2ConnectionFactory<?> connectionFactory = (OAuth2ConnectionFactory) this.connectionFactoryLocator.getConnectionFactory(providerId);
             AccessGrant accessGrant = connectionFactory.getOAuthOperations().exchangeForAccess(code, this.callbackUrl(request), null);
             Connection<?> connection = connectionFactory.createConnection(accessGrant);
-            String userId = socialRedisHelper.getStateUserId(state);
+            String userId = socialConnectRedisHelper.getStateUserId(state);
             jdbcConnectionRepository.createConnectionRepository(userId).addConnection(connection);
             response.sendRedirect(connectUrl);
         } catch (Exception ex) {

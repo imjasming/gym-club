@@ -16,7 +16,7 @@ INSERT INTO `oauth_client_details`
 VALUES ('client', NULL, NULL, NULL, 'password,authorization_code,refresh_token', NULL, '{noop}secret', NULL, NULL,
         'all', NULL);
 INSERT INTO `oauth_client_details`
-VALUES ('github', NULL, NULL, NULL, 'authorization_code,refresh_token', NULL, '{noop}secret', NULL, NULL, 'all', NULL);
+VALUES ('github', NULL, NULL, NULL, 'authorization_code', NULL, '{noop}secret', NULL, NULL, 'all', NULL);
 
 
 create table `userconnection`

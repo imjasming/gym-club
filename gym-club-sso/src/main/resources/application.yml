@@ -80,6 +80,7 @@ github:
 xm-resource:
   userInfoUri: https://api.github.com/user
 front-end:
+  social-bind-url: http://127.0.0.1:8088/#/register
   login-success-redirect-uri: http://127.0.0.1:8088/#/login
 
 gymclub:

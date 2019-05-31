@@ -22,8 +22,8 @@ import java.io.IOException;
 @Slf4j
 @Component("jsAuthenticationSuccessHandler")
 public class JsAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
-    @Value("${gymclub.security.social.callback-url}")
-    private String callbackUrl;
+    @Value("${front-end.login-success-redirect-uri}")
+    private String callbackUri;
 
     private String openIdParameter = "openId";
 
@@ -50,14 +50,17 @@ public class JsAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
         try {
             UserDetails user = (UserDetails) authentication.getPrincipal();
 
-            log.info("oauth login: userDetails: {}", JSON.toJSONString(user));
+            log.info("============= oauth login: userDetails: {}", JSON.toJSONString(user));
 
             // 生成 token
             //String token = jwtAccessTokenConverter.convertAccessToken()
             String token = jwtTokenUtil.generateToken(user);
+            StringBuilder redirectUri = new StringBuilder().append(callbackUri).append("?user=")
+                    .append(user.getUsername()).append("&token=").append(token).append("&tokenType=Bearer");
+
             // 社交登录成功跳转到成功页面
-            getRedirectStrategy().sendRedirect(request, response, "http://127.0.0.1:8088/#/me/profile?token=" + token);
-            //response.sendRedirect(callbackUrl + "?token=" + "test");
+            //getRedirectStrategy().sendRedirect(request, response, redirectUri.toString());
+            response.sendRedirect(redirectUri.toString());
         } catch (Exception ex) {
             log.info(ex.getMessage(), ex);
 //            throw new DomainException(ResultCode.USER_AUTH_FAILD);

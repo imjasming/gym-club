@@ -24,6 +24,8 @@ public interface UserRepository extends JpaRepository<UmUser, Integer> , JpaSpec
 
     List<UmUser> findAllByUsername(String username);
 
+    boolean existsByUsername(String username);
+
     boolean existsByEmail(String email);
 
     UmUser findByEmail(String email);
