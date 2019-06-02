@@ -5,14 +5,9 @@ import com.gymclub.sso.service.OAuthClientDetailsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.UnapprovedClientAuthenticationException;
-import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.OAuth2Request;
-import org.springframework.security.oauth2.provider.TokenRequest;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -21,8 +16,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Base64;
-import java.util.HashMap;
 
 /**
  * @author Xiaoming.
@@ -44,55 +37,22 @@ public class FormLoginAuthenticationSuccessHandler extends SavedRequestAwareAuth
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        OAuth2Request oAuth2Request = getOAuth2Request(request, response, authentication);
-
-        OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(oAuth2Request, authentication);
-
-        OAuth2AccessToken token = authorizationServerTokenServices.createAccessToken(oAuth2Authentication);
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(JSON.toJSONString(token));
-    }
-
-    public OAuth2Request getOAuth2Request(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         String header = request.getHeader("Authorization");
-//        String name = authentication.getName();
-//        String password = (String) authentication.getCredentials();
         if (header == null || !header.startsWith("Basic ")) {
             throw new UnapprovedClientAuthenticationException("请求头中无client信息");
         }
 
-        String[] tokens = extractAndDecodeHeader(header, request);
+        // 从前端 Authentication 中 decode 出 clientId，clientSecret，原 header：{username: 'client', password: 'secret'}
+        String[] tokens = OAuthTokenUtil.extractAndDecodeHeader(header);
         assert tokens.length == 2;
+
         String clientId = tokens[0];
         String clientSecret = tokens[1];
 
-        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
-        if (clientDetails == null) {
-            throw new UnapprovedClientAuthenticationException("clientId对应的配置信息不存在:" + clientId);
-        }
-        String oauthClientSecret = clientDetails.getClientSecret();
-        if (clientSecret != null && oauthClientSecret != null && !clientSecret.equals(oauthClientSecret.substring(6, 12))) {
-            throw new UnapprovedClientAuthenticationException("clientSecret不匹配:" + clientId);
-        }
+        OAuth2AccessToken token = OAuthTokenUtil.extractOAuthAccessToken(clientId, clientSecret,
+                authorizationServerTokenServices, clientDetailsService, authentication);
 
-        TokenRequest tokenRequest = new TokenRequest(new HashMap<>(), clientId, clientDetails.getScope(), "custom");
-        return tokenRequest.createOAuth2Request(clientDetails);
-    }
-
-    private String[] extractAndDecodeHeader(String header, HttpServletRequest request) throws IOException {
-
-        byte[] base64Token = header.substring(6).getBytes("UTF-8");
-        byte[] decoded;
-        try {
-            decoded = Base64.getDecoder().decode(base64Token);
-        } catch (IllegalArgumentException e) {
-            throw new BadCredentialsException("Failed to decode basic authentication token");
-        }
-        String token = new String(decoded, "UTF-8");
-        int delim = token.indexOf(":");
-        if (delim == -1) {
-            throw new BadCredentialsException("Invalid basic authentication token");
-        }
-        return new String[]{token.substring(0, delim), token.substring(delim + 1)};
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(JSON.toJSONString(token));
     }
 }

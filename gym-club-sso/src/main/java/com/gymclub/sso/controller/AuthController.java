@@ -1,6 +1,5 @@
 package com.gymclub.sso.controller;
 
-import com.gymclub.sso.exception.LoginSuccessHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,8 +25,6 @@ import java.util.Map;
 public class AuthController {
     @Autowired
     private ClientRegistrationRepository clientRegistrationRepository;
-    @Autowired
-    private LoginSuccessHandler loginSuccessHandler;
 
     @Value("${jwt.tokenHead}")
     private String tokenHead;

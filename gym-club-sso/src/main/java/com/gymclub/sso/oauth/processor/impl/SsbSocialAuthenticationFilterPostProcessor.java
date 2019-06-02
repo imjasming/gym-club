@@ -12,7 +12,7 @@ public class SsbSocialAuthenticationFilterPostProcessor implements SocialAuthent
     @Autowired
     private AuthenticationSuccessHandler jsAuthenticationSuccessHandler;
 
-    // 后处理器
+    // authenticate success 后处理器
     public void process(SocialAuthenticationFilter socialAuthenticationFilter) {
         socialAuthenticationFilter.setAuthenticationSuccessHandler(jsAuthenticationSuccessHandler);
     }

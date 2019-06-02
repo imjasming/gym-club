@@ -1,4 +1,4 @@
-package com.gymclub.sso.config;
+package com.gymclub.sso.server;
 
 import com.gymclub.sso.service.OAuthClientDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;

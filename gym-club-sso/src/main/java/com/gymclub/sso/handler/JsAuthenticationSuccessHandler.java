@@ -1,13 +1,13 @@
 package com.gymclub.sso.handler;
 
-import com.alibaba.fastjson.JSON;
-import com.gymclub.sso.jwt.JwtTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -30,9 +30,9 @@ public class JsAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
     private String providerIdParameter = "providerId";
 
     @Autowired
-    private JwtAccessTokenConverter jwtAccessTokenConverter;
+    private AuthorizationServerTokenServices authorizationServerTokenServices;
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private ClientDetailsService clientDetailsService;
 
     /**
      * 通过验证生成token
@@ -50,20 +50,28 @@ public class JsAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
         try {
             UserDetails user = (UserDetails) authentication.getPrincipal();
 
-            log.info("============= oauth login: userDetails: {}", JSON.toJSONString(user));
+            //log.info("============= oauth login: userDetails: {}", JSON.toJSONString(user));
 
             // 生成 token
             //String token = jwtAccessTokenConverter.convertAccessToken()
-            String token = jwtTokenUtil.generateToken(user);
-            StringBuilder redirectUri = new StringBuilder().append(callbackUri).append("?user=")
-                    .append(user.getUsername()).append("&token=").append(token).append("&tokenType=Bearer");
+            //String token = jwtTokenUtil.generateToken(user);
+
+            String clientId = "app";
+            String clientSecret = "app";
+
+            OAuth2AccessToken token = OAuthTokenUtil.extractOAuthAccessToken(clientId, clientSecret,
+                    authorizationServerTokenServices, clientDetailsService, authentication);
+
+            StringBuffer redirectUri = new StringBuffer().append(callbackUri).append("?user=")
+                    .append(user.getUsername()).append("&token=").append(token.getValue()).append("&tokenType=Bearer");
+
+            //log.info("token: {}\nuri: {}", JSON.toJSONString(token), redirectUri);
 
             // 社交登录成功跳转到成功页面
             //getRedirectStrategy().sendRedirect(request, response, redirectUri.toString());
             response.sendRedirect(redirectUri.toString());
         } catch (Exception ex) {
             log.info(ex.getMessage(), ex);
-//            throw new DomainException(ResultCode.USER_AUTH_FAILD);
         }
     }
 

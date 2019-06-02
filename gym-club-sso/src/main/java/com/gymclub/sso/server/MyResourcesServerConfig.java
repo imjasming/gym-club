@@ -1,4 +1,4 @@
-package com.gymclub.sso.config;
+package com.gymclub.sso.server;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

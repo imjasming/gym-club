@@ -2,14 +2,9 @@ package com.gymclub.sso.jwt;
 
 import com.alibaba.fastjson.JSON;
 import com.gymclub.sso.service.AuthUserDetailsService;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -38,7 +33,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        final String authHead = request.getHeader(this.tokenHeader);
+        /*final String authHead = request.getHeader(this.tokenHeader);
         if (authHead != null && authHead.startsWith(this.tokenHead)) {
 
             // the part after "Bearer "
@@ -67,7 +62,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     request.setAttribute("username", username);
                 }
             }
-        }
+        }*/
 
         log.info("from: {}:{}, request: {} {} {}, cookies: {}",
                 request.getRemoteAddr(),
